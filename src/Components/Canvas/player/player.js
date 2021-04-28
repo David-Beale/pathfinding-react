@@ -9,6 +9,7 @@ playerCar.src = playerCarImg;
 
 export default class Player {
   constructor(context, map, camera) {
+    clickIndicator.context = context;
     this.camera = camera;
     this.map = map.graphObj;
     this.context = context;
@@ -23,12 +24,9 @@ export default class Player {
     this.dy = 0;
     this.direction = null;
     this.reachedDestination = true;
-    this.requireNewPath = false;
     this.clickX = null;
     this.clickY = null;
-    this.index = 0;
-    this.start = null;
-    this.end = null;
+    this.pathIndex = 0;
     this.finalX = null;
     this.finalY = null;
     this.pathArray = [];
@@ -43,11 +41,9 @@ export default class Player {
     this.direction1 = null;
     this.direction2 = null;
     this.masterSpeed = 5;
-    clickIndicator.context = context;
   }
   run() {
     clickIndicator.run();
-
     //Calculate the next step enroute to the target destination
     if (!this.stopped && !this.compare) {
       if (this.subPath1Go) {
@@ -56,18 +52,7 @@ export default class Player {
         this.subPath2();
       }
     }
-    //If the car has reached the next target, the new target path is calcualted.
-    if (this.requireNewPath) {
-      this.findNewPath();
-    }
 
-    //Part of the intransit destination change. The vehicle will continue to the next vertex in its current path, then change its path.
-    //This is required to ensure curved trajectories are completed before changing its path.
-    if (this.reset && !this.subPath2Go && !this.subPath1Go) {
-      this.reset = false;
-      this.finalX = this.targetX;
-      this.finalY = this.targetY;
-    }
     if (!this.reachedDestination) {
       // if comparison mode is on, we pause the user car, and display only the 2 possible paths
       if (this.compare) {
@@ -89,32 +74,36 @@ export default class Player {
         } else {
           this.currentX += this.dx;
           this.currentY += this.dy;
-          if (this.currentX === this.finalX && this.currentY === this.finalY) {
-            this.requireNewPath = false;
-            this.reachedDestination = true;
-            this.start = this.end;
-            this.index = 0;
-            this.dx = 0;
-            this.dy = 0;
-            this.direction0 = null;
-            this.direction1 = null;
-            this.direction2 = null;
-          } else if (
-            this.currentX === this.targetX &&
-            this.currentY === this.targetY
-          ) {
-            this.requireNewPath = true;
-            this.index++;
+
+          if (this.hasReachedDestination()) {
+            this.reset();
+          } else if (this.hasReachedNextVertex()) {
+            this.pathIndex++;
+            this.findNewPath();
           }
         }
       }
     }
-    if (this.currentVertex) {
-      this.drawCar();
-    }
+    console.log(this.currentX, this.dx, this.targetX);
+    this.drawCar();
   }
 
   ///////////////Functions/////////////////////
+  hasReachedDestination() {
+    return this.currentX === this.finalX && this.currentY === this.finalY;
+  }
+  hasReachedNextVertex() {
+    return this.currentX === this.targetX && this.currentY === this.targetY;
+  }
+  reset() {
+    this.reachedDestination = true;
+    this.pathIndex = 0;
+    this.dx = 0;
+    this.dy = 0;
+    this.direction0 = null;
+    this.direction1 = null;
+    this.direction2 = null;
+  }
   findVertex() {
     const x = this.clickX - RADIUS;
     const y = this.clickY - RADIUS;
@@ -135,23 +124,23 @@ export default class Player {
     !this.currentVertex ? this.firstClick() : this.secondClick();
   }
   firstClick() {
-    this.start = this.findVertex();
-    this.currentVertex = this.map[this.start];
+    const vertex = this.findVertex();
+    this.currentVertex = this.map[vertex];
     this.currentVertex.occupied = true;
     this.currentX = this.clickX;
     this.currentY = this.clickY;
   }
   secondClick() {
-    this.end = this.findVertex();
-    const startVertex = this.nextVertex?.value || this.start;
+    const targetVertex = this.findVertex();
+    const startVertex = this.nextVertex?.value || this.currentVertex.value;
     this.finalX = this.clickX;
     this.finalY = this.clickY;
-    const pathFindingResult = this.runPathfinding(startVertex, this.end);
+    const pathFindingResult = this.runPathfinding(startVertex, targetVertex);
 
     this.pathArray = pathFindingResult[1];
-    if (!this.nextVertex) this.requireNewPath = true;
-    this.index = this.nextVertex ? -1 : 0;
+    this.pathIndex = this.nextVertex ? -1 : 0;
     this.reachedDestination = false;
+    if (!this.nextVertex) this.findNewPath();
   }
   runPathfinding(a, b) {
     switch (this.pathfinding) {
@@ -203,26 +192,23 @@ export default class Player {
   }
 
   findNewPath() {
-    this.currentVertex = this.map[this.pathArray[this.index]];
-    this.nextVertex = this.map[this.pathArray[this.index + 1]];
-    if (this.changeSpeedCheck) {
-      this.speed = this.masterSpeed;
-      this.changeSpeedCheck = false;
-    }
+    this.currentVertex = this.map[this.pathArray[this.pathIndex]];
+    this.nextVertex = this.map[this.pathArray[this.pathIndex + 1]];
     this.speedCheck();
 
     if (this.direction1 !== null) this.direction0 = this.direction1;
     if (this.direction2 !== null) this.direction1 = this.direction2;
-    else
+    else {
       this.direction1 = this.getDirection(
         this.currentVertex.x,
         this.nextVertex.x,
         this.currentVertex.y,
         this.nextVertex.y
       );
+    }
 
-    if (this.pathArray[this.index + 2]) {
-      this.nextNextVertex = this.map[this.pathArray[this.index + 2]];
+    if (this.pathArray[this.pathIndex + 2]) {
+      this.nextNextVertex = this.map[this.pathArray[this.pathIndex + 2]];
       this.direction2 = this.getDirection(
         this.nextVertex.x,
         this.nextNextVertex.x,
@@ -250,7 +236,6 @@ export default class Player {
     this.stepCount = Math.floor(50 / this.speed / 2);
     this.subPath1();
 
-    this.requireNewPath = false;
     if (
       !this.nextVertex.occupied &&
       this.currentVertex.light === "green" &&
@@ -268,21 +253,22 @@ export default class Player {
     }
   }
   drawPath() {
-    for (let i = this.index; i < this.pathArray.length - 1; i++) {
-      let thisX;
-      let thisY;
-      if (i === this.index) {
-        thisX = this.currentX;
-        thisY = this.currentY;
+    for (let i = this.pathIndex; i < this.pathArray.length - 1; i++) {
+      let startX;
+      let startY;
+      if (i === this.pathIndex) {
+        //path starts at car position
+        startX = this.currentX;
+        startY = this.currentY;
       } else {
-        const thisVertex = this.map[this.pathArray[i]];
-        thisX = thisVertex.x + RADIUS;
-        thisY = thisVertex.y + RADIUS;
+        const vertex = this.map[this.pathArray[i]];
+        startX = vertex.x + RADIUS;
+        startY = vertex.y + RADIUS;
       }
       const nextVertex = this.map[this.pathArray[i + 1]];
       const nextX = nextVertex.x + RADIUS;
       const nextY = nextVertex.y + RADIUS;
-      this.drawLine(thisX, thisY, nextX, nextY);
+      this.drawLine(startX, startY, nextX, nextY);
     }
   }
 
@@ -510,20 +496,22 @@ export default class Player {
   }
 
   speedChange(speed) {
-    this.masterSpeed = speed;
-    this.changeSpeedCheck = true;
+    this.speed = this.masterSpeed = speed;
   }
   speedCheck() {
     if (this.nextVertex.roadWorks) {
       this.speed = 1;
-    } else this.speed = this.masterSpeed;
-    if (this.nextVertex.speed && this.nextVertex.speed < this.speed) {
+    } else {
+      this.speed = this.masterSpeed;
+    }
+    if (this.nextVertex?.speed < this.speed) {
       this.speed = this.nextVertex.speed;
     }
   }
 
   //DRAWINGS
   drawCar() {
+    if (!this.currentVertex) return;
     const x = this.currentX - RADIUS + 25;
     const y = this.currentY - RADIUS / 2 + 12.5;
     const angle = (this.direction * Math.PI) / 180;
