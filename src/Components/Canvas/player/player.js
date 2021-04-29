@@ -6,6 +6,8 @@ const RADIUS = 25;
 const clickIndicator = new ClickIndicator(RADIUS);
 const playerCar = new Image();
 playerCar.src = playerCarImg;
+const DISTANCE_PATH_COLOR = "rgb(58, 94, 211)";
+const TIME_PATH_COLOR = "yellow";
 
 export default class Player {
   constructor(context, map, camera) {
@@ -14,51 +16,23 @@ export default class Player {
     this.map = map.graphObj;
     this.context = context;
     this.speed = 5;
-    this.currentVertex = null;
-    this.nextVertex = null;
-    this.currentX = null;
-    this.currentY = null;
     this.counter = 0;
-    this.dx = 0;
-    this.dy = 0;
-    this.reachedDestination = true;
-    this.clickX = null;
-    this.clickY = null;
-    this.pathIndex = 0;
-    this.pathArray = [];
     this.arrayOfVertices = Object.keys(map.graphObj);
-    this.step = RADIUS / this.speed;
-    this.enterCornerCheck = false;
-    this.exitCornerCheck = false;
     this.pathfinding = "dijkstra";
-    this.pathColor = "rgb(58, 94, 211)";
-    this.comparePaths = {};
-    this.carAngle = null;
     this.direction0 = null;
     this.direction1 = null;
     this.direction2 = null;
     this.masterSpeed = 5;
-    this.currentSubPath = null;
     this.startingCoords = [];
   }
   run() {
     clickIndicator.run();
-    //Calculate the next step enroute to the target destination
 
-    //   // if comparison mode is on, we pause the user car, and display only the 2 possible paths
-    //   if (this.compare) {
-    //     if (this.compareReady) {
-    //       this.pathColor = "yellow";
-    //       this.pathArray = this.comparePaths.time.path;
-    //       this.drawPath();
-    //       this.pathColor = "rgb(58, 94, 211)";
-    //       this.pathArray = this.comparePaths.distance.path;
-    //       this.drawPath();
-    //     }
-
-    //     // if comparison mode is off we will continue movement and position checks
-    if (!this.reachedDestination) {
-      this.drawPath();
+    if (this.compare) {
+      this.drawPath(this.comparePaths.time.path, 0, TIME_PATH_COLOR);
+      this.drawPath(this.comparePaths.distance.path, 0, DISTANCE_PATH_COLOR);
+    } else if (this.pathArray) {
+      this.drawPath(this.pathArray, this.pathIndex, this.pathColor);
       this.calculateNextStep();
     }
     this.drawCar();
@@ -70,59 +44,66 @@ export default class Player {
 
   click(e) {
     const { clientX, clientY } = e;
-    this.clickX = this.screenToCoords(clientX, this.camera.x);
-    this.clickY = this.screenToCoords(clientY, this.camera.y);
-    clickIndicator.click(this.clickX, this.clickY);
-    !this.currentVertex ? this.firstClick() : this.secondClick();
+    const x = this.screenToCoords(clientX, this.camera.x);
+    const y = this.screenToCoords(clientY, this.camera.y);
+    clickIndicator.click(x, y);
+    !this.currentVertex ? this.firstClick(x, y) : this.secondClick(x, y);
   }
   screenToCoords(screenCoords, cameraAdjustment) {
     const cameraAdjustedCoords =
       (screenCoords + cameraAdjustment) / this.camera.scale;
     return Math.floor(cameraAdjustedCoords / 50) * 50 + RADIUS;
   }
-  firstClick() {
-    const vertex = this.findVertex();
+  firstClick(x, y) {
+    const vertex = this.findVertex(x, y);
     this.currentVertex = this.map[vertex];
     this.currentVertex.occupied = true;
-    this.currentX = this.clickX;
-    this.currentY = this.clickY;
+    this.currentX = x;
+    this.currentY = y;
   }
-  secondClick() {
-    const targetVertex = this.findVertex();
+  secondClick(x, y) {
+    const targetVertex = this.findVertex(x, y);
     const startVertex = this.nextVertex?.value || this.currentVertex.value;
     const pathFindingResult = this.runPathfinding(startVertex, targetVertex);
 
     this.pathArray = pathFindingResult[1];
     this.pathIndex = this.nextVertex ? -1 : 0;
-    this.reachedDestination = false;
     if (!this.nextVertex) this.findNextSubPath();
   }
-  findVertex() {
-    const x = this.clickX - RADIUS;
-    const y = this.clickY - RADIUS;
+  findVertex(x, y) {
+    const targetX = x - RADIUS;
+    const targetY = y - RADIUS;
     for (let vertex of this.arrayOfVertices) {
-      if (this.map[vertex].x === x && this.map[vertex].y === y) return vertex;
+      if (this.map[vertex].x === targetX && this.map[vertex].y === targetY)
+        return vertex;
     }
   }
   runPathfinding(a, b) {
     switch (this.pathfinding) {
       case "dijkstra":
-        this.pathColor = "rgb(58, 94, 211)";
+        this.pathColor = DISTANCE_PATH_COLOR;
         return dijkstra(this.map, a, b);
       case "dijkstra-time":
-        this.pathColor = "yellow";
+        this.pathColor = TIME_PATH_COLOR;
         return dijkstraTime(this.map, a, b);
       default:
         return;
     }
   }
-  comparePaths() {
+  comparePaths(x, y) {
+    const startVertex = this.nextVertex?.value || this.currentVertex.value;
+    const targetVertex = this.findVertex(x, y);
+
     const [distanceDist, distancePath] = dijkstra(
       this.map,
-      this.start,
-      this.end
+      startVertex,
+      targetVertex
     );
-    const [timeTime, timePath] = dijkstraTime(this.map, this.start, this.end);
+    const [timeTime, timePath] = dijkstraTime(
+      this.map,
+      startVertex,
+      targetVertex
+    );
     this.comparePaths.distance = {
       distance: distanceDist,
       path: distancePath,
@@ -133,9 +114,13 @@ export default class Player {
       path: timePath,
       time: timeTime,
     };
-    //inital path will be time. When we draw the second line, the path will be set to distance. If the user selects time, path will be set back to time
-    this.pathColor = "yellow";
-    this.compareReady = true;
+    this.compare = true;
+  }
+  compareSelect(type) {
+    this.compare = false;
+    this.pathArray = this.comparePaths[type].path;
+    this.pathIndex = this.nextVertex ? -1 : 0;
+    if (!this.nextVertex) this.findNextSubPath();
   }
   getEstimatedTime(path) {
     let time = 0;
@@ -183,6 +168,10 @@ export default class Player {
       this.currentSubPath = 2;
       return;
     }
+    //fix rounding diffs:
+    this.currentX = this.targetX;
+    this.currentY = this.targetY;
+
     this.pathIndex++;
     this.findNextSubPath();
   }
@@ -207,15 +196,13 @@ export default class Player {
 
     this.getStartingCoords();
 
+    this.getTarget();
+
     this.obstacleCheck();
   }
 
   destinationReached() {
-    this.reachedDestination = true;
-    this.pathIndex = 0;
-    this.dx = 0;
-    this.dy = 0;
-    this.direction0 = null;
+    this.pathArray = null;
     this.direction1 = null;
     this.direction2 = null;
   }
@@ -354,6 +341,38 @@ export default class Player {
     )
       return [vertex.x + 50, vertex.y];
   }
+  getTarget() {
+    switch (this.movement2) {
+      case "straight":
+        this.targetX = this.nextVertex.x + RADIUS;
+        this.targetY = this.nextVertex.y + RADIUS;
+        break;
+      case "right": {
+        const targetAngle = this.direction1 - 45;
+        let [startX, startY] = this.startingCoords[1];
+        this.targetX = Math.round(
+          startX - RADIUS * Math.cos((Math.PI / 180) * targetAngle)
+        );
+        this.targetY = Math.round(
+          startY - RADIUS * Math.sin((Math.PI / 180) * targetAngle)
+        );
+        break;
+      }
+      case "left": {
+        const targetAngle = 405 - this.direction1;
+        const [startX, startY] = this.startingCoords[1];
+        this.targetX = Math.round(
+          startX - RADIUS * Math.sin((Math.PI / 180) * targetAngle)
+        );
+        this.targetY = Math.round(
+          startY - RADIUS * Math.cos((Math.PI / 180) * targetAngle)
+        );
+        break;
+      }
+      default:
+        break;
+    }
+  }
   obstacleCheck() {
     if (
       !this.nextVertex.occupied &&
@@ -449,31 +468,30 @@ export default class Player {
     this.context.drawImage(playerCar, -25, -12.5, 50, 25);
     this.context.restore();
   }
-  drawPath() {
-    for (let i = this.pathIndex; i < this.pathArray.length - 1; i++) {
+  drawPath(array, startIndex, color) {
+    for (let i = startIndex; i < array.length - 1; i++) {
       let startX;
       let startY;
-      if (i === this.pathIndex) {
-        console.log("start");
+      if (i === startIndex) {
         //path starts at car position
         startX = this.currentX;
         startY = this.currentY;
       } else {
-        const vertex = this.map[this.pathArray[i]];
+        const vertex = this.map[array[i]];
         startX = vertex.x + RADIUS;
         startY = vertex.y + RADIUS;
       }
-      const nextVertex = this.map[this.pathArray[i + 1]];
+      const nextVertex = this.map[array[i + 1]];
       const nextX = nextVertex.x + RADIUS;
       const nextY = nextVertex.y + RADIUS;
-      this.drawLine(startX, startY, nextX, nextY);
+      this.drawLine(startX, startY, nextX, nextY, color);
     }
   }
-  drawLine(x, y, targetx, targety) {
+  drawLine(x, y, targetx, targety, color) {
     this.context.beginPath();
-    this.context.fillStyle = this.pathColor;
+    this.context.fillStyle = color;
     let margin = 0;
-    if (this.pathColor === "yellow") {
+    if (color === TIME_PATH_COLOR) {
       margin = 1.5;
     }
     let dx = targetx - x;
