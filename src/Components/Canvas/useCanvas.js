@@ -20,7 +20,7 @@ export const useCanvas = (verticesMap, map) => {
     canvas.height = height * ratio;
     context.scale(ratio, ratio);
 
-    let trafficLightsDisabled = false;
+    let trafficLightsDisabled = true;
     let cameraLock = false;
     let counter = 0;
     cameraRef.current = new Camera(context);

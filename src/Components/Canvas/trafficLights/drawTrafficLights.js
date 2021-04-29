@@ -25,7 +25,8 @@ const indexLookup = {
   R: 1,
 };
 
-const getColor = (counter, offset) => {
+const getColor = (counter, offset, disabled) => {
+  if (disabled) return "green";
   let value = counter + offset;
   switch (true) {
     case value <= 180:
@@ -48,7 +49,7 @@ const getColor = (counter, offset) => {
 export const drawTrafficLights = (c, verticesMap, counter, disabled) => {
   trafficLights.forEach((light) => {
     const { tile, i, j } = light;
-    const color = getColor(counter, counterOffsets[tile]);
+    const color = getColor(counter, counterOffsets[tile], disabled);
     if (!disabled) {
       trafficLightDrawings(
         c,
