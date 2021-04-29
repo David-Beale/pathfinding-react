@@ -46,7 +46,9 @@ const getColor = (counter, offset, disabled) => {
   }
 };
 
-export const drawTrafficLights = (c, verticesMap, counter, disabled) => {
+let counter = 0;
+
+export const drawTrafficLights = (c, verticesMap, disabled) => {
   trafficLights.forEach((light) => {
     const { tile, i, j } = light;
     const color = getColor(counter, counterOffsets[tile], disabled);
@@ -63,4 +65,6 @@ export const drawTrafficLights = (c, verticesMap, counter, disabled) => {
     const vertex = vertices[index];
     vertex.light = color;
   });
+  counter++;
+  if (counter === 400) counter = 0;
 };

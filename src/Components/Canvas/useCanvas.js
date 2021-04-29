@@ -22,7 +22,7 @@ export const useCanvas = (verticesMap, map) => {
 
     let trafficLightsDisabled = false;
     let cameraLock = false;
-    let counter = 0;
+
     cameraRef.current = new Camera(context);
     const camera = cameraRef.current;
     playerRef.current = new Player(context, map, camera);
@@ -35,10 +35,8 @@ export const useCanvas = (verticesMap, map) => {
 
       reset(context, camera);
       drawMap(context);
-      drawTrafficLights(context, verticesMap, counter, trafficLightsDisabled);
+      drawTrafficLights(context, verticesMap, trafficLightsDisabled);
       player.run();
-      counter++;
-      if (counter === 400) counter = 0;
     };
     render();
   }, [verticesMap, map]);

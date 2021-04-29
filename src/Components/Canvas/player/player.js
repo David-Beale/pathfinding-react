@@ -56,6 +56,7 @@ export default class Player {
   }
   firstClick(x, y) {
     const vertex = this.findVertex(x, y);
+    if (!vertex) return;
     this.currentVertex = this.map[vertex];
     this.currentVertex.occupied = true;
     this.currentX = x;
@@ -63,6 +64,7 @@ export default class Player {
   }
   secondClick(x, y) {
     const targetVertex = this.findVertex(x, y);
+    if (!targetVertex) return;
     const startVertex = this.nextVertex?.value || this.currentVertex.value;
     const pathFindingResult = this.runPathfinding(startVertex, targetVertex);
 
