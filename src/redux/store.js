@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import roadWorks from "./roadWorks";
-import trafficLights from "./trafficLights";
+import toggles from "./toggles";
 
 export default configureStore({
   reducer: {
     roadWorks,
-    trafficLights,
+    toggles,
   },
 });

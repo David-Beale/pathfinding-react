@@ -4,6 +4,9 @@ export const Container = styled.div`
   width: 400px;
   padding: 50px 10px;
   background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 `;
 
 export const Icon = styled.div`

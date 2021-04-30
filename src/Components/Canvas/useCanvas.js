@@ -14,9 +14,7 @@ export const useCanvas = (verticesMap, map) => {
   const computerRef = useRef(null);
   const trafficLightsRef = useRef(null);
 
-  const trafficLights = useSelector(
-    ({ trafficLights }) => trafficLights.enabled
-  );
+  const trafficLights = useSelector(({ toggles }) => toggles.trafficLights);
   trafficLightsRef.current = trafficLights;
 
   useEffect(() => {

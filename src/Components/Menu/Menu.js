@@ -5,6 +5,7 @@ import MenuButton from "./Components/MenuButton";
 
 import { Container } from "./MenuStyle";
 import ToggleTrafficLights from "./Components/ToggleTrafficLights/ToggleTrafficLights";
+import ToggleCameraLock from "./Components/ToggleCameraLock/ToggleCameraLock";
 
 export default function Menu() {
   const [menuOpen, setMenuOpen] = useState(true);
@@ -15,6 +16,7 @@ export default function Menu() {
       <Drawer variant="persistent" anchor="left" open={menuOpen}>
         <Container>
           <ToggleTrafficLights />
+          <ToggleCameraLock />
         </Container>
       </Drawer>
     </>
