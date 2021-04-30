@@ -5,12 +5,19 @@ import { drawTrafficLights } from "./trafficLights/drawTrafficLights";
 import Camera from "./camera/camera";
 import Player from "./player/player";
 import ComputerController from "./computer/computerController";
+import { useSelector } from "react-redux";
 
 export const useCanvas = (verticesMap, map) => {
   const canvasRef = useRef(null);
   const playerRef = useRef(null);
   const cameraRef = useRef(null);
   const computerRef = useRef(null);
+  const trafficLightsRef = useRef(null);
+
+  const trafficLights = useSelector(
+    ({ trafficLights }) => trafficLights.enabled
+  );
+  trafficLightsRef.current = trafficLights;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -22,7 +29,6 @@ export const useCanvas = (verticesMap, map) => {
     canvas.height = height * ratio;
     context.scale(ratio, ratio);
 
-    let trafficLightsDisabled = false;
     let cameraLock = false;
 
     cameraRef.current = new Camera(context);
@@ -39,7 +45,7 @@ export const useCanvas = (verticesMap, map) => {
 
       reset(context, camera);
       drawMap(context);
-      drawTrafficLights(context, verticesMap, trafficLightsDisabled);
+      drawTrafficLights(context, verticesMap, trafficLightsRef.current);
       player.run();
       computerController.run();
     };

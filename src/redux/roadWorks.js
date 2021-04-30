@@ -4,7 +4,7 @@ export const initialState = {
   setting: false,
 };
 const roadWorks = createSlice({
-  name: "extracts",
+  name: "roadWorks",
   initialState,
   reducers: {
     drawRoadWorks(state) {
