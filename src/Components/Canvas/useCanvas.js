@@ -4,11 +4,13 @@ import { drawMap } from "./map/drawMap";
 import { drawTrafficLights } from "./trafficLights/drawTrafficLights";
 import Camera from "./camera/camera";
 import Player from "./player/player";
+import ComputerController from "./computer/computerController";
 
 export const useCanvas = (verticesMap, map) => {
   const canvasRef = useRef(null);
   const playerRef = useRef(null);
   const cameraRef = useRef(null);
+  const computerRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -27,6 +29,8 @@ export const useCanvas = (verticesMap, map) => {
     const camera = cameraRef.current;
     playerRef.current = new Player(context, map, camera);
     const player = playerRef.current;
+    computerRef.current = new ComputerController(context, map);
+    const computerController = computerRef.current;
 
     const render = () => {
       window.requestAnimationFrame(render);
@@ -37,6 +41,7 @@ export const useCanvas = (verticesMap, map) => {
       drawMap(context);
       drawTrafficLights(context, verticesMap, trafficLightsDisabled);
       player.run();
+      computerController.run();
     };
     render();
   }, [verticesMap, map]);
