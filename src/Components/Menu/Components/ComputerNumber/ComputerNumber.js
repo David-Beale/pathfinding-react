@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { changeComputerNumber } from "../../../../redux/settings";
 import CustomSlider from "../../../../Styling/Components/CustomSlider";
-import { Container, SliderTitle } from "./ComputerNumberStyle";
+import { SubContainer } from "../../MenuStyle";
 
 export default function ComputerNumber() {
   const [localSliderValue, setLocalSliderValue] = useState(15);
@@ -11,8 +11,8 @@ export default function ComputerNumber() {
   const dispatch = useDispatch();
 
   return (
-    <Container>
-      <SliderTitle>Number of computer cars</SliderTitle>
+    <SubContainer>
+      Number of computer cars
       <CustomSlider
         value={localSliderValue}
         onMouseDown={(e) => e.stopPropagation()}
@@ -23,6 +23,6 @@ export default function ComputerNumber() {
         onChangeCommitted={(e, value) => dispatch(changeComputerNumber(value))}
         valueLabelDisplay="auto"
       />
-    </Container>
+    </SubContainer>
   );
 }

@@ -3,11 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 
 import { toggleCameraLock } from "../../../../redux/settings";
-import {
-  StyledIconButton,
-  ToggleButtonContainer,
-  ToggleButtonText,
-} from "../ToggleButtonStyle";
+import { SubContainer } from "../../MenuStyle";
+import { StyledIconButton } from "../ToggleButtonStyle";
 
 export default function ToggleCameraLock() {
   const dispatch = useDispatch();
@@ -17,11 +14,11 @@ export default function ToggleCameraLock() {
     dispatch(toggleCameraLock());
   };
   return (
-    <ToggleButtonContainer>
+    <SubContainer>
       <StyledIconButton enabled={enabled ? 1 : 0} onClick={onClick}>
         <PhotoCameraIcon fontSize="large" />
       </StyledIconButton>
-      <ToggleButtonText>Toggle camera lock</ToggleButtonText>
-    </ToggleButtonContainer>
+      Toggle camera lock
+    </SubContainer>
   );
 }

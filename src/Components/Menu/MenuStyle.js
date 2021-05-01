@@ -13,3 +13,16 @@ export const Container = styled.div`
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 `;
+export const SubContainer = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 5px 0;
+  padding: 10px;
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 0 10px -1px slategray;
+  height: 70px;
+`;

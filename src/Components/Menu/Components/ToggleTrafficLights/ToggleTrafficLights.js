@@ -4,11 +4,8 @@ import TrafficIcon from "@material-ui/icons/Traffic";
 
 import { toggleTrafficLights } from "../../../../redux/settings";
 
-import {
-  StyledIconButton,
-  ToggleButtonContainer,
-  ToggleButtonText,
-} from "../ToggleButtonStyle";
+import { SubContainer } from "../../MenuStyle";
+import { StyledIconButton } from "../ToggleButtonStyle";
 import { RedLight, GreenLight, YellowLight } from "./ToggleTrafficLightsStyle";
 
 export default function ToggleTrafficLights() {
@@ -19,7 +16,7 @@ export default function ToggleTrafficLights() {
     dispatch(toggleTrafficLights());
   };
   return (
-    <ToggleButtonContainer>
+    <SubContainer>
       <StyledIconButton enabled={enabled ? 1 : 0} onClick={onClick}>
         <TrafficIcon fontSize="large" />
         {enabled && (
@@ -30,7 +27,7 @@ export default function ToggleTrafficLights() {
           </>
         )}
       </StyledIconButton>
-      <ToggleButtonText>Toggle traffic lights</ToggleButtonText>
-    </ToggleButtonContainer>
+      Toggle traffic lights
+    </SubContainer>
   );
 }

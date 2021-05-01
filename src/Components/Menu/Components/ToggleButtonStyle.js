@@ -10,18 +10,3 @@ export const StyledIconButton = styled(IconButton)`
   position: absolute;
   left: 10px;
 `;
-export const ToggleButtonContainer = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 5px 0;
-  padding: 5px;
-  width: 100%;
-  border-radius: 10px;
-  box-shadow: 0 0 10px -1px slategray;
-  height: 70px;
-`;
-export const ToggleButtonText = styled.div`
-  margin-left: 20px;
-`;
