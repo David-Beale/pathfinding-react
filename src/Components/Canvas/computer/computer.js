@@ -5,7 +5,7 @@ export default class Computer {
   constructor(context, map, vertex) {
     this.context = context;
     this.map = map;
-    this.currentVertex = map.graphObj[vertex];
+    this.currentVertex = map[vertex];
     this.computerCar = randomCar();
     this.stopped = true;
     this.counter = 0;
@@ -39,7 +39,6 @@ export default class Computer {
     //fix rounding diffs:
     this.currentX = this.targetX;
     this.currentY = this.targetY;
-    this.currentVertex = this.nextVertex;
     this.findNewPath();
   }
 
@@ -50,7 +49,7 @@ export default class Computer {
     }
     const possibleDestinations = this.currentVertex.getEdges();
     const unoccupiedDestinations = possibleDestinations.filter(
-      (vertex) => !this.map.graphObj[vertex].occupied
+      (vertex) => !this.map[vertex].occupied
     );
 
     if (!unoccupiedDestinations.length) {
@@ -62,7 +61,7 @@ export default class Computer {
       Math.random() * unoccupiedDestinations.length
     );
 
-    this.nextVertex = this.map.graphObj[unoccupiedDestinations[randomIndex]];
+    this.nextVertex = this.map[unoccupiedDestinations[randomIndex]];
 
     this.speedCheck();
 
@@ -70,8 +69,9 @@ export default class Computer {
 
     this.stopped = false;
     this.currentVertex.occupiedFalse();
-    this.nextVertex.occupied = true;
-    this.nextVertex.speed = this.speed;
+    this.currentVertex = this.nextVertex;
+    this.currentVertex.occupied = true;
+    this.currentVertex.speed = this.speed;
   }
   speedCheck() {
     if (this.nextVertex.roadWorks) {

@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 
-import { toggleCameraLock } from "../../../../redux/toggles";
+import { toggleCameraLock } from "../../../../redux/settings";
 import {
   StyledIconButton,
   ToggleButtonContainer,
@@ -11,7 +11,7 @@ import {
 
 export default function ToggleCameraLock() {
   const dispatch = useDispatch();
-  const enabled = useSelector(({ toggles }) => toggles.cameraLock);
+  const enabled = useSelector(({ settings }) => settings.cameraLock);
 
   const onClick = () => {
     dispatch(toggleCameraLock());

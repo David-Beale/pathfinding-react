@@ -12,13 +12,16 @@ export const useCanvas = (verticesMap, map) => {
   const playerRef = useRef(null);
   const cameraRef = useRef(null);
   const computerRef = useRef(null);
-  const togglesRef = useRef({});
+  const settingsRef = useRef({});
 
-  togglesRef.current.trafficLights = useSelector(
-    ({ toggles }) => toggles.trafficLights
+  settingsRef.current.trafficLights = useSelector(
+    ({ settings }) => settings.trafficLights
   );
-  togglesRef.current.cameraLock = useSelector(
-    ({ toggles }) => toggles.cameraLock
+  settingsRef.current.cameraLock = useSelector(
+    ({ settings }) => settings.cameraLock
+  );
+  settingsRef.current.computerNumber = useSelector(
+    ({ settings }) => settings.computerNumber
   );
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -36,20 +39,23 @@ export const useCanvas = (verticesMap, map) => {
     const player = playerRef.current;
     computerRef.current = new ComputerController(context, map);
     const computerController = computerRef.current;
-    const toggles = togglesRef.current;
+    const settings = settingsRef.current;
 
     const render = () => {
       window.requestAnimationFrame(render);
 
-      if (toggles.cameraLock) camera.followPlayer(player);
+      if (settings.cameraLock) camera.followPlayer(player);
       reset(context, camera);
       drawMap(context);
-      drawTrafficLights(context, verticesMap, toggles.trafficLights);
+      drawTrafficLights(context, verticesMap, settings.trafficLights);
       player.run();
       computerController.run();
     };
     render();
   }, [verticesMap, map]);
 
+  useEffect(() => {
+    computerRef.current.spawnCars(settingsRef.current.computerNumber);
+  }, [settingsRef.current.computerNumber]);
   return { canvasRef, player: playerRef, camera: cameraRef };
 };

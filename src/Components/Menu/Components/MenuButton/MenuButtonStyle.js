@@ -5,7 +5,7 @@ export const Icon = styled.div`
   height: 20px;
   position: fixed;
   top: 15px;
-  left: 40px;
+  left: 25px;
   z-index: 1201;
   cursor: pointer;
 
