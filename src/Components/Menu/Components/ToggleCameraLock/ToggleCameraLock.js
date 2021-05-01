@@ -17,7 +17,7 @@ export default function ToggleCameraLock() {
     <>
       <Tooltip title="Toggle camera lock">
         <IconButton onClick={onClick}>
-          <StyledCameraIcon enabled={enabled} fontSize="large" />
+          <StyledCameraIcon enabled={enabled ? 1 : 0} fontSize="large" />
         </IconButton>
       </Tooltip>
     </>

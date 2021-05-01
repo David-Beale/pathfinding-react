@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export const initialState = {
   trafficLights: true,
-  cameraLock: false,
+  cameraLock: true,
 };
 const toggles = createSlice({
   name: "toggles",

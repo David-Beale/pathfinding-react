@@ -12,11 +12,14 @@ export const useCanvas = (verticesMap, map) => {
   const playerRef = useRef(null);
   const cameraRef = useRef(null);
   const computerRef = useRef(null);
-  const trafficLightsRef = useRef(null);
+  const togglesRef = useRef({});
 
-  const trafficLights = useSelector(({ toggles }) => toggles.trafficLights);
-  trafficLightsRef.current = trafficLights;
-
+  togglesRef.current.trafficLights = useSelector(
+    ({ toggles }) => toggles.trafficLights
+  );
+  togglesRef.current.cameraLock = useSelector(
+    ({ toggles }) => toggles.cameraLock
+  );
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
@@ -27,23 +30,21 @@ export const useCanvas = (verticesMap, map) => {
     canvas.height = height * ratio;
     context.scale(ratio, ratio);
 
-    let cameraLock = false;
-
-    cameraRef.current = new Camera(context);
+    cameraRef.current = new Camera(context, canvas.width, canvas.height);
     const camera = cameraRef.current;
     playerRef.current = new Player(context, map, camera);
     const player = playerRef.current;
     computerRef.current = new ComputerController(context, map);
     const computerController = computerRef.current;
+    const toggles = togglesRef.current;
 
     const render = () => {
       window.requestAnimationFrame(render);
 
-      if (cameraLock) camera.followPlayer(player);
-
+      if (toggles.cameraLock) camera.followPlayer(player);
       reset(context, camera);
       drawMap(context);
-      drawTrafficLights(context, verticesMap, trafficLightsRef.current);
+      drawTrafficLights(context, verticesMap, toggles.trafficLights);
       player.run();
       computerController.run();
     };

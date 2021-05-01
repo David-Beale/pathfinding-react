@@ -23,7 +23,7 @@ export const Icon = styled.div`
     position: absolute;
     height: 4px;
     width: 100%;
-    background: rgba(0, 0, 0, 0.54);
+    background: black;
     border-radius: 3px;
     opacity: 1;
     left: 0;

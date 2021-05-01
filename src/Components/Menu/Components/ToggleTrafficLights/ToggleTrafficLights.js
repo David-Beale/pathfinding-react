@@ -22,7 +22,7 @@ export default function ToggleTrafficLights() {
     <>
       <Tooltip title="Toggle traffic lights">
         <IconButton onClick={onClick}>
-          <StyledTrafficIcon enabled={enabled} fontSize="large" />
+          <StyledTrafficIcon enabled={enabled ? 1 : 0} fontSize="large" />
           {enabled && (
             <>
               <RedLight />
