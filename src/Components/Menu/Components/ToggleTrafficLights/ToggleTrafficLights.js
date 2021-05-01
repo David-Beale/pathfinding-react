@@ -1,15 +1,12 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { IconButton, Tooltip } from "@material-ui/core";
+import { Tooltip } from "@material-ui/core";
+import TrafficIcon from "@material-ui/icons/Traffic";
 
 import { toggleTrafficLights } from "../../../../redux/toggles";
 
-import {
-  StyledTrafficIcon,
-  RedLight,
-  GreenLight,
-  YellowLight,
-} from "./ToggleTrafficLightsStyle";
+import { StyledIconButton } from "../ToggleButtonStyle";
+import { RedLight, GreenLight, YellowLight } from "./ToggleTrafficLightsStyle";
 
 export default function ToggleTrafficLights() {
   const dispatch = useDispatch();
@@ -21,8 +18,8 @@ export default function ToggleTrafficLights() {
   return (
     <>
       <Tooltip title="Toggle traffic lights">
-        <IconButton onClick={onClick}>
-          <StyledTrafficIcon enabled={enabled ? 1 : 0} fontSize="large" />
+        <StyledIconButton enabled={enabled ? 1 : 0} onClick={onClick}>
+          <TrafficIcon fontSize="large" />
           {enabled && (
             <>
               <RedLight />
@@ -30,7 +27,7 @@ export default function ToggleTrafficLights() {
               <GreenLight />
             </>
           )}
-        </IconButton>
+        </StyledIconButton>
       </Tooltip>
     </>
   );

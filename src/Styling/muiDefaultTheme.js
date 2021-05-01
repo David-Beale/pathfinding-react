@@ -6,7 +6,7 @@ export const makeMuiTheme = () =>
       MuiDrawer: {
         paper: {
           background:
-            "linear-gradient(to right bottom, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.1))",
+            "linear-gradient(to right bottom, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.2))",
           backdropFilter: "blur(1rem)",
           backgroundColor: "transparent",
         },

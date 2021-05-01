@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Drawer from "@material-ui/core/Drawer";
 
-import MenuButton from "./Components/MenuButton";
+import MenuButton from "./Components/MenuButton/MenuButton";
 
 import { Container } from "./MenuStyle";
 import ToggleTrafficLights from "./Components/ToggleTrafficLights/ToggleTrafficLights";

@@ -1,10 +1,10 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { IconButton, Tooltip } from "@material-ui/core";
+import { Tooltip } from "@material-ui/core";
+import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 
 import { toggleCameraLock } from "../../../../redux/toggles";
-
-import { StyledCameraIcon } from "./ToggleCameraLockStyle";
+import { StyledIconButton } from "../ToggleButtonStyle";
 
 export default function ToggleCameraLock() {
   const dispatch = useDispatch();
@@ -16,9 +16,9 @@ export default function ToggleCameraLock() {
   return (
     <>
       <Tooltip title="Toggle camera lock">
-        <IconButton onClick={onClick}>
-          <StyledCameraIcon enabled={enabled ? 1 : 0} fontSize="large" />
-        </IconButton>
+        <StyledIconButton enabled={enabled ? 1 : 0} onClick={onClick}>
+          <PhotoCameraIcon fontSize="large" />
+        </StyledIconButton>
       </Tooltip>
     </>
   );

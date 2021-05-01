@@ -1,7 +1,7 @@
 import React from "react";
 import { Tooltip } from "@material-ui/core";
 
-import { Icon } from "../MenuStyle";
+import { Icon } from "./MenuButtonStyle";
 
 export default function MenuButton({ setMenuOpen, menuOpen }) {
   const toggleMenu = () => {
