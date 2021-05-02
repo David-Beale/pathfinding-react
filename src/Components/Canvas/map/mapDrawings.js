@@ -1,10 +1,12 @@
+const ROAD_COLOR = "rgb(73, 73, 73)";
+
 export const mapDrawings = {
   XR: function (c, x, y) {
-    c.fillStyle = "rgb(55, 55, 55)";
+    c.fillStyle = ROAD_COLOR;
     c.fillRect(x, y, 100, 100);
   },
   HR: function (c, x, y) {
-    c.fillStyle = "rgb(55, 55, 55)";
+    c.fillStyle = ROAD_COLOR;
     c.fillRect(x, y, 100, 100);
     c.strokeStyle = "yellow";
     for (let i = 1; i < 100; i += 98) {
@@ -22,7 +24,7 @@ export const mapDrawings = {
     }
   },
   TB: function (c, x, y) {
-    c.fillStyle = "rgb(55, 55, 55)";
+    c.fillStyle = ROAD_COLOR;
     c.fillRect(x, y, 100, 100);
     c.strokeStyle = "yellow";
     c.beginPath();
@@ -42,7 +44,7 @@ export const mapDrawings = {
     c.stroke();
   },
   TT: function (c, x, y) {
-    c.fillStyle = "rgb(55, 55, 55)";
+    c.fillStyle = ROAD_COLOR;
     c.fillRect(x, y, 100, 100);
     c.strokeStyle = "yellow";
     c.beginPath();
@@ -62,7 +64,7 @@ export const mapDrawings = {
     c.stroke();
   },
   VR: function (c, x, y) {
-    c.fillStyle = "rgb(55, 55, 55)";
+    c.fillStyle = ROAD_COLOR;
     c.fillRect(x, y, 100, 100);
     c.strokeStyle = "yellow";
     for (let i = 1; i < 100; i += 98) {
@@ -80,7 +82,7 @@ export const mapDrawings = {
     }
   },
   TR: function (c, x, y) {
-    c.fillStyle = "rgb(55, 55, 55)";
+    c.fillStyle = ROAD_COLOR;
     c.fillRect(x, y, 100, 100);
     c.strokeStyle = "yellow";
     c.beginPath();
@@ -100,7 +102,7 @@ export const mapDrawings = {
     c.stroke();
   },
   TL: function (c, x, y) {
-    c.fillStyle = "rgb(55, 55, 55)";
+    c.fillStyle = ROAD_COLOR;
     c.fillRect(x, y, 100, 100);
     c.strokeStyle = "yellow";
     c.beginPath();
@@ -120,7 +122,7 @@ export const mapDrawings = {
     c.stroke();
   },
   TLC: function (c, x, y) {
-    c.fillStyle = "rgb(55, 55, 55)";
+    c.fillStyle = ROAD_COLOR;
     c.fillRect(x, y, 100, 100);
     c.strokeStyle = "yellow";
     c.beginPath();
@@ -152,7 +154,7 @@ export const mapDrawings = {
     c.stroke();
   },
   TRC: function (c, x, y) {
-    c.fillStyle = "rgb(55, 55, 55)";
+    c.fillStyle = ROAD_COLOR;
     c.fillRect(x, y, 100, 100);
     c.strokeStyle = "yellow";
     c.beginPath();
@@ -184,7 +186,7 @@ export const mapDrawings = {
     c.stroke();
   },
   BRC: function (c, x, y) {
-    c.fillStyle = "rgb(55, 55, 55)";
+    c.fillStyle = ROAD_COLOR;
     c.fillRect(x, y, 100, 100);
     c.strokeStyle = "yellow";
     c.beginPath();
@@ -216,7 +218,7 @@ export const mapDrawings = {
     c.stroke();
   },
   BLC: function (c, x, y) {
-    c.fillStyle = "rgb(55, 55, 55)";
+    c.fillStyle = ROAD_COLOR;
     c.fillRect(x, y, 100, 100);
     c.strokeStyle = "yellow";
     c.beginPath();

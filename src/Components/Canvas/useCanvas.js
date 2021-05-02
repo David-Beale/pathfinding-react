@@ -23,15 +23,10 @@ export const useCanvas = (verticesMap, map) => {
   settingsRef.current.computerNumber = useSelector(
     ({ settings }) => settings.computerNumber
   );
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
-
-    const { width, height } = canvas.getBoundingClientRect();
-    const { devicePixelRatio: ratio = 1 } = window;
-    canvas.width = width * ratio;
-    canvas.height = height * ratio;
-    context.scale(ratio, ratio);
 
     cameraRef.current = new Camera(context, canvas.width, canvas.height);
     const camera = cameraRef.current;
@@ -57,5 +52,5 @@ export const useCanvas = (verticesMap, map) => {
   useEffect(() => {
     computerRef.current.spawnCars(settingsRef.current.computerNumber);
   }, [settingsRef.current.computerNumber]);
-  return { canvasRef, player: playerRef, camera: cameraRef };
+  return { canvasRef, playerRef, cameraRef };
 };
