@@ -8,6 +8,7 @@ import ComputerController from "./computer/computerController";
 import { useSelector } from "react-redux";
 import { drawCollisionBoxes } from "./collisionBoxes/drawCollisionBoxes";
 import { drawRoadWorks } from "./roadWorks/drawRoadWorks";
+import { drawTrafficConditions } from "./trafficConditions/drawTrafficConditions";
 
 export const useCanvas = (verticesMap, map) => {
   const canvasRef = useRef(null);
@@ -27,6 +28,9 @@ export const useCanvas = (verticesMap, map) => {
   );
   settingsRef.current.collisionBoxes = useSelector(
     ({ settings }) => settings.collisionBoxes
+  );
+  settingsRef.current.trafficConditions = useSelector(
+    ({ settings }) => settings.trafficConditions
   );
 
   useEffect(() => {
@@ -48,6 +52,7 @@ export const useCanvas = (verticesMap, map) => {
       reset(context, camera);
       drawMap(context);
       drawTrafficLights(context, verticesMap, settings.trafficLights);
+      drawTrafficConditions(context, map, settings.trafficConditions);
       drawRoadWorks(context, map);
       if (settings.collisionBoxes) drawCollisionBoxes(context, map);
       player.run();

@@ -10,6 +10,7 @@ import ComputerNumber from "./Components/ComputerNumber/ComputerNumber";
 import ToggleCollisionBoxes from "./Components/ToggleCollisionBoxes/ToggleCollisionBoxes";
 import AddRoadWorks from "./Components/AddRoadWorks/AddRoadWorks";
 import RemoveRoadWorks from "./Components/RemoveRoadWorks/RemoveRoadWorks";
+import ToggleTrafficConditions from "./Components/ToggleTrafficConditions/ToggleTrafficConditions";
 
 export default function Menu() {
   const [menuOpen, setMenuOpen] = useState(true);
@@ -22,6 +23,7 @@ export default function Menu() {
           <ToggleTrafficLights />
           <ToggleCameraLock />
           <ToggleCollisionBoxes />
+          <ToggleTrafficConditions />
           <AddRoadWorks />
           <RemoveRoadWorks />
           <ComputerNumber />

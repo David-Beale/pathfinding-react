@@ -5,6 +5,7 @@ export const initialState = {
   cameraLock: false,
   collisionBoxes: false,
   computerNumber: 15,
+  trafficConditions: false,
 };
 const settings = createSlice({
   name: "settings",
@@ -19,6 +20,9 @@ const settings = createSlice({
     toggleCollisionBoxes(state) {
       state.collisionBoxes = !state.collisionBoxes;
     },
+    toggleTrafficConditions(state) {
+      state.trafficConditions = !state.trafficConditions;
+    },
     changeComputerNumber(state, action) {
       state.computerNumber = action.payload;
     },
@@ -28,8 +32,9 @@ const settings = createSlice({
 export const {
   toggleTrafficLights,
   toggleCameraLock,
-  changeComputerNumber,
   toggleCollisionBoxes,
+  toggleTrafficConditions,
+  changeComputerNumber,
 } = settings.actions;
 
 export default settings.reducer;

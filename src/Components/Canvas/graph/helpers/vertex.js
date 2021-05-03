@@ -23,18 +23,15 @@ class Vertex {
   occupiedCheck() {
     if (this.occupied === true) this.internalCounter++;
   }
-  occupiedFalse(speed) {
+  occupiedFalse() {
     this.occupied = false;
     if (this.internalCounter > 0) {
       this.averageArray.push(this.internalCounter);
       this.internalCounter = 0;
       if (this.averageArray.length > 10) this.averageArray.shift();
       if (this.averageArray.length) {
-        this.average = 0;
-        for (let i = 0; i < this.averageArray.length; i++) {
-          this.average += this.averageArray[i];
-        }
-        this.average /= this.averageArray.length;
+        const sum = this.averageArray.reduce((a, b) => a + b, 0);
+        this.average = sum / this.averageArray.length;
       }
     }
   }
