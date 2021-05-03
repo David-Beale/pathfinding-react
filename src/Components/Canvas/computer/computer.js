@@ -79,9 +79,9 @@ export default class Computer {
     } else {
       this.speed = this.masterSpeed;
     }
-    if (this.nextVertex?.speed < this.speed) {
-      this.speed = this.nextVertex.speed;
-    }
+    // if (this.nextVertex?.speed < this.speed) {
+    //   this.speed = this.nextVertex.speed;
+    // }
     this.stepCount = Math.floor(50 / this.speed);
   }
 

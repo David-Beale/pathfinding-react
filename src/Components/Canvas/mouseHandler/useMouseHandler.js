@@ -30,11 +30,8 @@ export const useMouseHandler = (playerRef, cameraRef, map) => {
 
   const handleMouseMove = (e) => {
     const { clientX, clientY } = e;
-    if (addRoadWorks) {
-      handleRoadWorks({ x: clientX, y: clientY, add: true });
-      return;
-    } else if (removeRoadWorks) {
-      handleRoadWorks({ x: clientX, y: clientY, remove: true });
+    if (addRoadWorks || removeRoadWorks) {
+      handleRoadWorks({ x: clientX, y: clientY });
       return;
     }
     cameraRef.current.drag(clientX, clientY);
@@ -46,19 +43,24 @@ export const useMouseHandler = (playerRef, cameraRef, map) => {
       if (vertex.x === x && vertex.y === y) return vertex;
     }
   };
-  const handleRoadWorks = ({ x, y, add, remove }) => {
+  const handleRoadWorks = ({ x, y }) => {
     let xCoord = (x + cameraRef.current.x) / cameraRef.current.scale;
     let yCoord = (y + cameraRef.current.y) / cameraRef.current.scale;
     let clickX = Math.floor(xCoord / 50) * 50;
     let clickY = Math.floor(yCoord / 50) * 50;
     const vertex = findVertex(clickX, clickY);
     if (!vertex) return;
-    if (add) vertex.roadWorks = true;
-    else if (remove) vertex.roadWorks = false;
+    if (addRoadWorks) vertex.roadWorks = true;
+    else if (removeRoadWorks) vertex.roadWorks = false;
   };
 
   const onClick = (e) => {
-    playerRef.current.click(e);
+    const { clientX, clientY } = e;
+    if (addRoadWorks || removeRoadWorks) {
+      handleRoadWorks({ x: clientX, y: clientY });
+      return;
+    }
+    playerRef.current.click(clientX, clientY);
     //     //// If there is no player car already on the map and we are comparing paths:
     //     if (player.compare && !compareClickCount) {
     //       $("#text").html("Select a destination");
@@ -76,5 +78,6 @@ export const useMouseHandler = (playerRef, cameraRef, map) => {
     const { clientX, clientY, deltaY } = e;
     cameraRef.current.scroll(clientX, clientY, deltaY);
   };
-  return [handleMouseDown, onWheel];
+  const cursor = addRoadWorks ? "crosshair" : removeRoadWorks ? "no-drop" : "";
+  return [handleMouseDown, onWheel, cursor];
 };

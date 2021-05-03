@@ -42,8 +42,7 @@ export default class Player {
   // ─── USER INTERACTIONS ──────────────────────────────────────────────────────────
   //
 
-  click(e) {
-    const { clientX, clientY } = e;
+  click(clientX, clientY) {
     const x = this.screenToCoords(clientX, this.camera.x);
     const y = this.screenToCoords(clientY, this.camera.y);
     clickIndicator.click(x, y);
@@ -214,9 +213,9 @@ export default class Player {
     } else {
       this.speed = this.masterSpeed;
     }
-    if (this.nextVertex?.speed < this.speed) {
-      this.speed = this.nextVertex.speed;
-    }
+    // if (this.nextVertex?.speed < this.speed) {
+    //   this.speed = this.nextVertex.speed;
+    // }
     this.stepCount = Math.floor(25 / this.speed);
   }
   updateDirections() {
