@@ -6,6 +6,7 @@ import Camera from "./camera/camera";
 import Player from "./player/player";
 import ComputerController from "./computer/computerController";
 import { useSelector } from "react-redux";
+import { drawCollisionBoxes } from "./collisionBoxes/drawCollisionBoxes";
 
 export const useCanvas = (verticesMap, map) => {
   const canvasRef = useRef(null);
@@ -22,6 +23,9 @@ export const useCanvas = (verticesMap, map) => {
   );
   settingsRef.current.computerNumber = useSelector(
     ({ settings }) => settings.computerNumber
+  );
+  settingsRef.current.collisionBoxes = useSelector(
+    ({ settings }) => settings.collisionBoxes
   );
 
   useEffect(() => {
@@ -43,6 +47,7 @@ export const useCanvas = (verticesMap, map) => {
       reset(context, camera);
       drawMap(context);
       drawTrafficLights(context, verticesMap, settings.trafficLights);
+      if (settings.collisionBoxes) drawCollisionBoxes(context, map);
       player.run();
       computerController.run();
     };
