@@ -1,5 +1,4 @@
 import { trafficLights } from "./trafficLightData";
-import { trafficLightDrawings } from "./trafficLightDrawings";
 const counterOffsets = {
   U: 0,
   D: 0,
@@ -67,4 +66,13 @@ export const drawTrafficLights = (c, verticesMap, enabled) => {
   });
   counter++;
   if (counter === 400) counter = 0;
+};
+
+const trafficLightDrawings = (c, x, y, color) => {
+  c.beginPath();
+  c.arc(x, y, 5, 0, Math.PI * 2, false);
+  c.fillStyle = color;
+  c.strokeStyle = "black";
+  c.stroke();
+  c.fill();
 };
