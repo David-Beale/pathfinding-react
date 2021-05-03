@@ -15,22 +15,19 @@ export default class Camera {
   zoom(x, y) {
     this.context.scale(x, y);
   }
-  drag(e) {
-    const { clientX, clientY } = e;
+  drag(x, y) {
+    let diffX = x - this.prev.x;
+    let diffY = y - this.prev.y;
 
-    let diffX = clientX - this.prev.x;
-    let diffY = clientY - this.prev.y;
-
-    this.prev = { x: clientX, y: clientY };
+    this.prev = { x, y };
     this.x -= diffX;
     this.y -= diffY;
     this.translate(diffX, diffY);
   }
-  scroll(e) {
-    const { clientX, clientY } = e;
-    const scaleFactor = e.deltaY < 0 ? 1.25 : 0.8;
-    const diffX = (this.x + clientX) * (1 - scaleFactor);
-    const diffY = (this.y + clientY) * (1 - scaleFactor);
+  scroll(x, y, direction) {
+    const scaleFactor = direction < 0 ? 1.25 : 0.8;
+    const diffX = (this.x + x) * (1 - scaleFactor);
+    const diffY = (this.y + y) * (1 - scaleFactor);
     this.x -= diffX;
     this.y -= diffY;
     this.scale *= scaleFactor;

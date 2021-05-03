@@ -7,7 +7,7 @@ import { useWindowResize } from "./useWindowResize";
 export default function Canvas() {
   const [map, verticesMap] = useGraph();
   const { canvasRef, playerRef, cameraRef } = useCanvas(verticesMap, map);
-  const [onMouseDown, onWheel] = useMouseHandler(playerRef, cameraRef);
+  const [onMouseDown, onWheel] = useMouseHandler(playerRef, cameraRef, map);
   useWindowResize(canvasRef, cameraRef);
 
   return (

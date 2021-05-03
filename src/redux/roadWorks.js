@@ -1,28 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const initialState = {
-  setting: false,
+  addRoadWorks: false,
+  removeRoadWorks: false,
 };
 const roadWorks = createSlice({
   name: "roadWorks",
   initialState,
   reducers: {
-    drawRoadWorks(state) {
-      state.setting = "draw";
+    toggleAddRoadWorks(state) {
+      state.addRoadWorks = !state.addRoadWorks;
+      if (state.addRoadWorks) state.removeRoadWorks = false;
     },
-    removeRoadWorks(state) {
-      state.setting = "remove";
-    },
-    disableRoadWorks(state) {
-      state.setting = false;
+    toggleRemoveRoadWorks(state) {
+      state.removeRoadWorks = !state.removeRoadWorks;
+      if (state.removeRoadWorks) state.addRoadWorks = false;
     },
   },
 });
 
-export const {
-  drawRoadWorks,
-  removeRoadWorks,
-  disableRoadWorks,
-} = roadWorks.actions;
+export const { toggleAddRoadWorks, toggleRemoveRoadWorks } = roadWorks.actions;
 
 export default roadWorks.reducer;

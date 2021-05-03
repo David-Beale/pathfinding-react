@@ -8,6 +8,8 @@ import ToggleTrafficLights from "./Components/ToggleTrafficLights/ToggleTrafficL
 import ToggleCameraLock from "./Components/ToggleCameraLock/ToggleCameraLock";
 import ComputerNumber from "./Components/ComputerNumber/ComputerNumber";
 import ToggleCollisionBoxes from "./Components/ToggleCollisionBoxes/ToggleCollisionBoxes";
+import AddRoadWorks from "./Components/AddRoadWorks/AddRoadWorks";
+import RemoveRoadWorks from "./Components/RemoveRoadWorks/RemoveRoadWorks";
 
 export default function Menu() {
   const [menuOpen, setMenuOpen] = useState(true);
@@ -20,6 +22,8 @@ export default function Menu() {
           <ToggleTrafficLights />
           <ToggleCameraLock />
           <ToggleCollisionBoxes />
+          <AddRoadWorks />
+          <RemoveRoadWorks />
           <ComputerNumber />
         </Container>
       </Drawer>

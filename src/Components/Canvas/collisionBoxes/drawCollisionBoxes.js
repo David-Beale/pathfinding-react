@@ -6,12 +6,6 @@ export const drawCollisionBoxes = (c, map) => {
       drawYellowCircle(c, vertex.x + 25, vertex.y + 25, 35);
     }
   });
-  for (let index = 0; index < arrayOfVertices.length; index++) {
-    const vertex = map.graphObj[arrayOfVertices[index]];
-    if (vertex.occupied) {
-      drawYellowCircle(c, vertex.x + 25, vertex.y + 25, 35);
-    }
-  }
 };
 
 const drawYellowCircle = (c, x, y, radius) => {

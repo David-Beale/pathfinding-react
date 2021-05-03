@@ -1,8 +1,11 @@
 import { useRef } from "react";
 import { useSelector } from "react-redux";
 
-export const useMouseHandler = (playerRef, cameraRef) => {
-  const roadWorks = useSelector(({ roadWorks }) => roadWorks.setting);
+export const useMouseHandler = (playerRef, cameraRef, map) => {
+  const addRoadWorks = useSelector(({ roadWorks }) => roadWorks.addRoadWorks);
+  const removeRoadWorks = useSelector(
+    ({ roadWorks }) => roadWorks.removeRoadWorks
+  );
   const clickStart = useRef(null);
   const prevCoords = useRef(null);
 
@@ -26,26 +29,32 @@ export const useMouseHandler = (playerRef, cameraRef) => {
   };
 
   const handleMouseMove = (e) => {
-    if (roadWorks) {
-      handleRoadWorks(e);
+    const { clientX, clientY } = e;
+    if (addRoadWorks) {
+      handleRoadWorks({ x: clientX, y: clientY, add: true });
+      return;
+    } else if (removeRoadWorks) {
+      handleRoadWorks({ x: clientX, y: clientY, remove: true });
       return;
     }
-    cameraRef.current.drag(e);
+    cameraRef.current.drag(clientX, clientY);
   };
-  const handleRoadWorks = (e) => {
-    // let xCoord = (e.pageX + tiles.cameraX) / tiles.cameraScale;
-    //     let yCoord = (e.pageY + tiles.cameraY) / tiles.cameraScale;
-    //     let clickX = Math.floor(xCoord / 50) * 50;
-    //     let clickY = Math.floor(yCoord / 50) * 50;
-    //     for (let i = 0; i < arrayOfVertices.length; i++) {
-    //       let thisVertex = map.graphObj[arrayOfVertices[i]];
-    //       if (thisVertex.x === clickX && thisVertex.y === clickY) {
-    //         if (roadWorksAdd) {
-    //           thisVertex.roadWorks = true;
-    //         } else thisVertex.roadWorks = false;
-    //         i = arrayOfVertices.length; //end loop when found
-    //       }
-    //     }
+  const findVertex = (x, y) => {
+    const arrayOfVertices = Object.keys(map.graphObj);
+    for (let vertexName of arrayOfVertices) {
+      const vertex = map.graphObj[vertexName];
+      if (vertex.x === x && vertex.y === y) return vertex;
+    }
+  };
+  const handleRoadWorks = ({ x, y, add, remove }) => {
+    let xCoord = (x + cameraRef.current.x) / cameraRef.current.scale;
+    let yCoord = (y + cameraRef.current.y) / cameraRef.current.scale;
+    let clickX = Math.floor(xCoord / 50) * 50;
+    let clickY = Math.floor(yCoord / 50) * 50;
+    const vertex = findVertex(clickX, clickY);
+    if (!vertex) return;
+    if (add) vertex.roadWorks = true;
+    else if (remove) vertex.roadWorks = false;
   };
 
   const onClick = (e) => {
@@ -64,7 +73,8 @@ export const useMouseHandler = (playerRef, cameraRef) => {
   };
 
   const onWheel = (e) => {
-    cameraRef.current.scroll(e);
+    const { clientX, clientY, deltaY } = e;
+    cameraRef.current.scroll(clientX, clientY, deltaY);
   };
   return [handleMouseDown, onWheel];
 };
