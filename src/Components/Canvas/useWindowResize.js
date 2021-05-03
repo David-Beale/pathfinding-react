@@ -5,7 +5,7 @@ export const useWindowResize = (canvasRef, cameraRef) => {
     const camera = cameraRef.current;
     const canvas = canvasRef.current;
     const initialView = () => {
-      const diffX = canvas.width / (2 * canvas.ratio) - 550;
+      const diffX = Math.min(canvas.width / (2 * canvas.ratio) - 550, 600);
       const diffY = canvas.height / (2 * canvas.ratio) - 750;
       camera.x = -diffX;
       camera.y = -diffY;
