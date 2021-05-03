@@ -1,11 +1,14 @@
-import { useRef } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addStats } from "../../../redux/mode";
 
 export const useMouseHandler = (playerRef, cameraRef, map) => {
+  const dispatch = useDispatch();
   const addRoadWorks = useSelector(({ roadWorks }) => roadWorks.addRoadWorks);
   const removeRoadWorks = useSelector(
     ({ roadWorks }) => roadWorks.removeRoadWorks
   );
+  const pathfindingMode = useSelector(({ mode }) => mode.mode);
   const clickStart = useRef(null);
   const prevCoords = useRef(null);
 
@@ -49,7 +52,6 @@ export const useMouseHandler = (playerRef, cameraRef, map) => {
     let clickX = Math.floor(xCoord / 50) * 50;
     let clickY = Math.floor(yCoord / 50) * 50;
     const vertex = findVertex(clickX, clickY);
-    console.log(vertex);
     if (!vertex) return;
     if (addRoadWorks) vertex.roadWorks = true;
     else if (removeRoadWorks) vertex.roadWorks = false;
@@ -61,24 +63,19 @@ export const useMouseHandler = (playerRef, cameraRef, map) => {
       handleRoadWorks({ x: clientX, y: clientY });
       return;
     }
-    playerRef.current.click(clientX, clientY);
-    //     //// If there is no player car already on the map and we are comparing paths:
-    //     if (player.compare && !compareClickCount) {
-    //       $("#text").html("Select a destination");
-    //       compareClickCount = 1;
-    //     }
-    //     //If there is a player car on the map
-    //     else if (player.compare && compareClickCount === 1) {
-    //       $("#distance").removeClass("selected");
-    //       $("#time").removeClass("selected");
-    //       $("#text").html("Select a method");
-    //       compareClickCount = 2;
+    const res = playerRef.current.click(clientX, clientY);
+    if (res) dispatch(addStats({ ...res }));
   };
 
   const onWheel = (e) => {
     const { clientX, clientY, deltaY } = e;
     cameraRef.current.scroll(clientX, clientY, deltaY);
   };
+
+  useEffect(() => {
+    playerRef.current.modeSelect(pathfindingMode);
+  }, [playerRef, pathfindingMode]);
+
   const cursor = addRoadWorks ? "crosshair" : removeRoadWorks ? "no-drop" : "";
   return [handleMouseDown, onWheel, cursor];
 };

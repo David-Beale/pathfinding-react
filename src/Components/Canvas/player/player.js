@@ -6,8 +6,10 @@ const RADIUS = 25;
 const clickIndicator = new ClickIndicator(RADIUS);
 const playerCar = new Image();
 playerCar.src = playerCarImg;
-const DISTANCE_PATH_COLOR = "rgb(58, 94, 211)";
-const TIME_PATH_COLOR = "yellow";
+const COLORS = {
+  distance: "rgb(58, 94, 211)",
+  time: "yellow",
+};
 
 export default class Player {
   constructor(context, map, camera) {
@@ -18,19 +20,20 @@ export default class Player {
     this.speed = 5;
     this.counter = 0;
     this.arrayOfVertices = Object.keys(map.graphObj);
-    this.pathfinding = "dijkstra";
+    this.pathfinding = "distance";
     this.direction0 = null;
     this.direction1 = null;
     this.direction2 = null;
     this.masterSpeed = 5;
     this.startingCoords = [];
+    this.comparePaths = {};
   }
   run() {
     clickIndicator.run();
 
     if (this.compare) {
-      this.drawPath(this.comparePaths.time.path, 0, TIME_PATH_COLOR);
-      this.drawPath(this.comparePaths.distance.path, 0, DISTANCE_PATH_COLOR);
+      this.drawPath(this.comparePaths.time.path, 0, COLORS.time);
+      this.drawPath(this.comparePaths.distance.path, 0, COLORS.distance);
     } else if (this.pathArray) {
       this.drawPath(this.pathArray, this.pathIndex, this.pathColor);
       this.calculateNextStep();
@@ -46,7 +49,7 @@ export default class Player {
     const x = this.screenToCoords(clientX, this.camera.x);
     const y = this.screenToCoords(clientY, this.camera.y);
     clickIndicator.click(x, y);
-    !this.currentVertex ? this.firstClick(x, y) : this.secondClick(x, y);
+    return !this.currentVertex ? this.firstClick(x, y) : this.secondClick(x, y);
   }
   screenToCoords(screenCoords, cameraAdjustment) {
     const cameraAdjustedCoords =
@@ -66,7 +69,7 @@ export default class Player {
     if (!targetVertex) return;
     const startVertex = this.nextVertex?.value || this.currentVertex.value;
     const pathFindingResult = this.runPathfinding(startVertex, targetVertex);
-
+    if (this.compare) return this.comparePaths;
     this.pathArray = pathFindingResult[1];
     this.pathIndex = this.nextVertex ? -1 : 0;
     if (!this.nextVertex) this.findNextSubPath();
@@ -81,45 +84,38 @@ export default class Player {
   }
   runPathfinding(a, b) {
     switch (this.pathfinding) {
-      case "dijkstra":
-        this.pathColor = DISTANCE_PATH_COLOR;
+      case "distance":
+        this.pathColor = COLORS.distance;
         return dijkstra(this.map, a, b);
-      case "dijkstra-time":
-        this.pathColor = TIME_PATH_COLOR;
+      case "time":
+        this.pathColor = COLORS.time;
         return dijkstraTime(this.map, a, b);
+      case "compare":
+        const [distanceDist, distancePath] = dijkstra(this.map, a, b);
+        const [timeTime, timePath] = dijkstraTime(this.map, a, b);
+        this.comparePaths.distance = {
+          distance: distanceDist,
+          path: distancePath,
+          time: this.getEstimatedTime(distancePath),
+        };
+        this.comparePaths.time = {
+          distance: timePath.length - 1,
+          path: timePath,
+          time: timeTime,
+        };
+        this.compare = true;
+        return;
       default:
         return;
     }
   }
-  comparePaths(x, y) {
-    const startVertex = this.nextVertex?.value || this.currentVertex.value;
-    const targetVertex = this.findVertex(x, y);
 
-    const [distanceDist, distancePath] = dijkstra(
-      this.map,
-      startVertex,
-      targetVertex
-    );
-    const [timeTime, timePath] = dijkstraTime(
-      this.map,
-      startVertex,
-      targetVertex
-    );
-    this.comparePaths.distance = {
-      distance: distanceDist,
-      path: distancePath,
-      time: this.getEstimatedTime(distancePath),
-    };
-    this.comparePaths.time = {
-      distance: timePath.length - 1,
-      path: timePath,
-      time: timeTime,
-    };
-    this.compare = true;
-  }
-  compareSelect(type) {
+  modeSelect(mode) {
+    this.pathfinding = mode;
+    if (!this.compare) return;
     this.compare = false;
-    this.pathArray = this.comparePaths[type].path;
+    this.pathColor = COLORS[mode];
+    this.pathArray = this.comparePaths[mode].path;
     this.pathIndex = this.nextVertex ? -1 : 0;
     if (!this.nextVertex) this.findNextSubPath();
   }
@@ -492,7 +488,7 @@ export default class Player {
     this.context.beginPath();
     this.context.fillStyle = color;
     let margin = 0;
-    if (color === TIME_PATH_COLOR) {
+    if (color === COLORS.time) {
       margin = 1.5;
     }
     let dx = targetx - x;

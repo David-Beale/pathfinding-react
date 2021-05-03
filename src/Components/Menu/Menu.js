@@ -11,6 +11,7 @@ import ToggleCollisionBoxes from "./Components/ToggleCollisionBoxes/ToggleCollis
 import AddRoadWorks from "./Components/AddRoadWorks/AddRoadWorks";
 import RemoveRoadWorks from "./Components/RemoveRoadWorks/RemoveRoadWorks";
 import ToggleTrafficConditions from "./Components/ToggleTrafficConditions/ToggleTrafficConditions";
+import Mode from "./Components/Mode/Mode";
 
 export default function Menu() {
   const [menuOpen, setMenuOpen] = useState(true);
@@ -20,10 +21,11 @@ export default function Menu() {
       <MenuButton setMenuOpen={setMenuOpen} menuOpen={menuOpen} />
       <Drawer variant="persistent" anchor="left" open={menuOpen}>
         <Container>
+          <Mode />
           <ToggleTrafficLights />
-          <ToggleCameraLock />
-          <ToggleCollisionBoxes />
           <ToggleTrafficConditions />
+          <ToggleCollisionBoxes />
+          <ToggleCameraLock />
           <AddRoadWorks />
           <RemoveRoadWorks />
           <ComputerNumber />
