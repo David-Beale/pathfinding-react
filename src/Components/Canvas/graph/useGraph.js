@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { formattedTiles } from "../data/formattedMapData";
+import { startingRoadWorks } from "../roadWorks/startingRoadWorks";
 import Graph from "./helpers/graph.js";
 import Vertex from "./helpers/vertex.js";
 const map = new Graph({ directed: true });
@@ -129,6 +130,7 @@ export const useGraph = () => {
         }
       }
     }
+    startingRoadWorks(map);
     return [map, verticesMap];
   }, []);
 };

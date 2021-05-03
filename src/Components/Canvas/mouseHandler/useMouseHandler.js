@@ -49,6 +49,7 @@ export const useMouseHandler = (playerRef, cameraRef, map) => {
     let clickX = Math.floor(xCoord / 50) * 50;
     let clickY = Math.floor(yCoord / 50) * 50;
     const vertex = findVertex(clickX, clickY);
+    console.log(vertex);
     if (!vertex) return;
     if (addRoadWorks) vertex.roadWorks = true;
     else if (removeRoadWorks) vertex.roadWorks = false;

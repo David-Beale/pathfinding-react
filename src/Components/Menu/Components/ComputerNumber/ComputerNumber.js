@@ -5,7 +5,7 @@ import CustomSlider from "../../../../Styling/Components/CustomSlider";
 import { SubContainer } from "../../MenuStyle";
 
 export default function ComputerNumber() {
-  const [localSliderValue, setLocalSliderValue] = useState(15);
+  const [localSliderValue, setLocalSliderValue] = useState(60);
 
   // Retrieve redux dispatch
   const dispatch = useDispatch();

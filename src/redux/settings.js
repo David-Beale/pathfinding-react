@@ -4,7 +4,7 @@ export const initialState = {
   trafficLights: true,
   cameraLock: false,
   collisionBoxes: false,
-  computerNumber: 15,
+  computerNumber: 60,
   trafficConditions: false,
 };
 const settings = createSlice({
