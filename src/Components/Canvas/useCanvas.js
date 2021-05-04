@@ -1,37 +1,22 @@
 import { useRef, useEffect } from "react";
-import { reset } from "./generalFunctions/reset";
-import { drawMap } from "./map/drawMap";
-import { drawTrafficLights } from "./trafficLights/drawTrafficLights";
+
 import Camera from "./camera/camera";
 import Player from "./player/player";
 import ComputerController from "./computer/computerController";
-import { useSelector } from "react-redux";
+import { reset } from "./generalFunctions/reset";
+import { drawMap } from "./map/drawMap";
+import { drawTrafficLights } from "./trafficLights/drawTrafficLights";
 import { drawCollisionBoxes } from "./collisionBoxes/drawCollisionBoxes";
 import { drawRoadWorks } from "./roadWorks/drawRoadWorks";
 import { drawTrafficConditions } from "./trafficConditions/drawTrafficConditions";
+import { useSettings } from "./useSettings";
 
 export const useCanvas = (verticesMap, map) => {
   const canvasRef = useRef(null);
   const playerRef = useRef(null);
   const cameraRef = useRef(null);
   const computerRef = useRef(null);
-  const settingsRef = useRef({});
-
-  settingsRef.current.trafficLights = useSelector(
-    ({ settings }) => settings.trafficLights
-  );
-  settingsRef.current.cameraLock = useSelector(
-    ({ settings }) => settings.cameraLock
-  );
-  settingsRef.current.computerNumber = useSelector(
-    ({ settings }) => settings.computerNumber
-  );
-  settingsRef.current.collisionBoxes = useSelector(
-    ({ settings }) => settings.collisionBoxes
-  );
-  settingsRef.current.trafficConditions = useSelector(
-    ({ settings }) => settings.trafficConditions
-  );
+  const settingsRef = useSettings();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -59,10 +44,10 @@ export const useCanvas = (verticesMap, map) => {
       computerController.run();
     };
     render();
-  }, [verticesMap, map]);
+  }, [settingsRef, verticesMap, map]);
 
   useEffect(() => {
     computerRef.current.spawnCars(settingsRef.current.computerNumber);
-  }, [settingsRef.current.computerNumber]);
+  }, [settingsRef, settingsRef.current.computerNumber]);
   return { canvasRef, playerRef, cameraRef };
 };
