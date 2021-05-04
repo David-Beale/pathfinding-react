@@ -1,34 +1,46 @@
 import MinHeap from "./Heap";
 
-const dijkstraTime = (graph, start, end) => {
-  let distances = {};
-  for (let property in graph) {
-    //////////////////////////////////start here refers to the current path
-    distances[property] = [Infinity, [start]];
+const dijkstra = (graph, startVertex, endVertex) => {
+  const distances = {};
+  for (let vertex in graph) {
+    distances[vertex] = { totalDistance: Infinity, path: [startVertex] };
   }
-  distances[start] = [0, [start]];
-  let toExplore = new MinHeap();
+  distances[startVertex] = { totalDistance: 0, path: [startVertex] };
+  const toExplore = new MinHeap();
 
-  // arg 1 = edge distance, arg 2 = vertex, arg 3 = current path
-  toExplore.add([0, start, [start]]);
+  toExplore.add({ distance: 0, vertex: startVertex, path: [startVertex] });
+  let minDist = Infinity;
   while (toExplore.count) {
-    let temp = toExplore.retrieveMin();
-    let currentDistance = temp[0];
-    let currentVertex = temp[1];
-    let currentPath = temp[2];
-    graph[currentVertex].edges.forEach((arrayItem) => {
-      let edgeDist = graph[currentVertex].average;
-      let neighbour = arrayItem[0];
-      let newDistance = currentDistance + edgeDist;
-      let newPath = [...currentPath, neighbour];
-      //if newdistance is less than stored distance for that vertex
-      if (newDistance < distances[neighbour][0]) {
-        distances[neighbour][0] = newDistance;
-        distances[neighbour][1] = newPath;
-        toExplore.add([newDistance, neighbour, newPath]);
+    const { distance, vertex, path } = toExplore.retrieveMin();
+
+    for (let edge of graph[vertex].edges) {
+      const edgeDist = graph[vertex].average;
+      const neighbour = edge[0];
+
+      const newDistance = distance + edgeDist;
+      const newPath = [...path, neighbour];
+
+      if (
+        newDistance >= distances[neighbour].totalDistance ||
+        newDistance > minDist
+      ) {
+        continue;
       }
-    });
+
+      distances[neighbour].totalDistance = newDistance;
+      distances[neighbour].path = newPath;
+
+      if (neighbour === endVertex && newDistance < minDist) {
+        minDist = newDistance;
+        continue;
+      }
+      toExplore.add({
+        distance: newDistance,
+        vertex: neighbour,
+        path: newPath,
+      });
+    }
   }
-  return distances[end];
+  return distances[endVertex];
 };
-export default dijkstraTime;
+export default dijkstra;

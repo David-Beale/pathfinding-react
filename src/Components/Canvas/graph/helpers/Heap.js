@@ -13,7 +13,7 @@ class MinHeap {
     while (this.parentIndex(index) > 0) {
       let child = this.heapList[index];
       let parent = this.heapList[this.parentIndex(index)];
-      if (parent[0] > child[0]) {
+      if (parent.totalDistance > child.totalDistance) {
         this.heapList[index] = parent;
         this.heapList[this.parentIndex(index)] = child;
       }
@@ -26,7 +26,7 @@ class MinHeap {
       let smallerChildIndex = this.getSmallerChildIndex(index);
       let parent = this.heapList[index];
       let child = this.heapList[smallerChildIndex];
-      if (parent[0] > child[0]) {
+      if (parent.distance > child.distance) {
         this.heapList[smallerChildIndex] = parent;
         this.heapList[index] = child;
       }
@@ -59,7 +59,7 @@ class MinHeap {
     }
     let leftChild = this.heapList[this.leftChildIndex(index)];
     let rightChild = this.heapList[this.rightChildIndex(index)];
-    if (leftChild[0] < rightChild[0]) {
+    if (leftChild.distance < rightChild.distance) {
       return this.leftChildIndex(index);
     } else {
       return this.rightChildIndex(index);

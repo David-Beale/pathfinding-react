@@ -68,9 +68,9 @@ export default class Player {
     const targetVertex = this.findVertex(x, y);
     if (!targetVertex) return;
     const startVertex = this.nextVertex?.value || this.currentVertex.value;
-    const pathFindingResult = this.runPathfinding(startVertex, targetVertex);
+    const { path } = this.runPathfinding(startVertex, targetVertex);
     if (this.compare) return this.comparePaths;
-    this.pathArray = pathFindingResult[1];
+    this.pathArray = path;
     this.pathIndex = this.nextVertex ? -1 : 0;
     if (!this.nextVertex) this.findNextSubPath();
   }
@@ -91,8 +91,16 @@ export default class Player {
         this.pathColor = COLORS.time;
         return dijkstraTime(this.map, a, b);
       case "compare":
-        const [distanceDist, distancePath] = dijkstra(this.map, a, b);
-        const [timeTime, timePath] = dijkstraTime(this.map, a, b);
+        const { totalDistance: distanceDist, path: distancePath } = dijkstra(
+          this.map,
+          a,
+          b
+        );
+        const { totalDistance: timeTime, path: timePath } = dijkstraTime(
+          this.map,
+          a,
+          b
+        );
         this.comparePaths.distance = {
           distance: distanceDist,
           path: distancePath,
@@ -104,9 +112,9 @@ export default class Player {
           time: timeTime,
         };
         this.compare = true;
-        return;
+        return {};
       default:
-        return;
+        return {};
     }
   }
 
