@@ -4,6 +4,7 @@ import Drawer from "@material-ui/core/Drawer";
 import MenuButton from "./Components/MenuButton/MenuButton";
 
 import { Container } from "./MenuStyle";
+import Help from "./Components/Help/Help";
 import ToggleTrafficLights from "./Components/ToggleTrafficLights/ToggleTrafficLights";
 import ToggleCameraLock from "./Components/ToggleCameraLock/ToggleCameraLock";
 import ComputerNumber from "./Components/ComputerNumber/ComputerNumber";
@@ -21,6 +22,7 @@ export default function Menu() {
       <MenuButton setMenuOpen={setMenuOpen} menuOpen={menuOpen} />
       <Drawer variant="persistent" anchor="left" open={menuOpen}>
         <Container>
+          <Help />
           <Mode />
           <ToggleTrafficLights />
           <ToggleTrafficConditions />
