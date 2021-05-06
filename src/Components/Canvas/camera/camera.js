@@ -36,8 +36,10 @@ export default class Camera {
   }
   followPlayer(player) {
     if (!player.currentX) return;
-    let diffX = this.width / 2 + this.x - player.currentX * this.scale;
-    let diffY = this.height / 2 + this.y - player.currentY * this.scale;
+    let diffX =
+      this.width / (2 * this.ratio) + this.x - player.currentX * this.scale;
+    let diffY =
+      this.height / (2 * this.ratio) + this.y - player.currentY * this.scale;
     this.translate(diffX, diffY);
     this.x -= diffX;
     this.y -= diffY;
